@@ -21,21 +21,22 @@ class RedactingFormatter(logging.Formatter):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields if fields else []
 
-    def filter_datum(self, fields: List[str],
-                     redaction: str, message: List[str],
-                     separator: str) -> str:
-        """return the log message obfuscated"""
-        for i in fields:
-            message = re.sub(i + "=.*?" + separator,
-                             i + "=" + redaction + separator, message)
-        return message
-
     def format(self, record: logging.LogRecord) -> str:
         """filter values in incoming log records using filter_datum"""
         record.asctime = self.formatTime(record, self.datefmt)
         record.msg = self.filter_datum(self.fields, self.REDACTION,
                                        record.msg, self.SEPARATOR)
         return super(RedactingFormatter, self).format(record)
+
+
+def filter_datum(self, fields: List[str],
+                 redaction: str, message: List[str],
+                 separator: str) -> str:
+    """return the log message obfuscated"""
+    for i in fields:
+        message = re.sub(i + "=.*?" + separator,
+                         i + "=" + redaction + separator, message)
+    return message
 
 
 def get_logger() -> logging.Logger:
