@@ -17,7 +17,7 @@ def status() -> str:
 @app_views.route('unauthorized')
 def unauthorized():
     """test for unauthorized endpoint"""
-    abort(401)
+    return abort(401)
 
 
 @app_views.route('/stats/', strict_slashes=False)
