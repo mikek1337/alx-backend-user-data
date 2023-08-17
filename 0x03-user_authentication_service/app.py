@@ -4,7 +4,6 @@ from flask import Flask, jsonify, request
 from auth import Auth
 
 app = Flask(__name__)
-app.debug = True
 AUTH = Auth()
 
 
