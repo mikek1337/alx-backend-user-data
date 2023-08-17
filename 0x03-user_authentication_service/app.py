@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Flask app module"""
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, session
 from auth import Auth
 
 app = Flask(__name__)
+app.secret_key = 'somekey'
 AUTH = Auth()
 
 
@@ -43,7 +44,7 @@ def login() -> str:
     user_exists = AUTH.valid_login(email, password)
     if user_exists:
         session_id = AUTH.create_session(email)
-        app.config["session_id"] = session_id
+        #session['session_id'] = session_id
         return jsonify({"email": email, "message": "logged in"})
     else:
         return abort(401)
