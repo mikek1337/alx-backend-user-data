@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Flask app module"""
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from auth import Auth
 
 app = Flask(__name__)
+app.debug = True
 AUTH = Auth()
 
 
@@ -16,17 +17,20 @@ def hello() -> str:
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route('/users', methods=['POST'], strict_slashes=False)
-def register_user(email: str, password: str) -> str:
+@app.post('/users', strict_slashes=False)
+def register_user() -> str:
     """POST /users
-    Return:
-      - JSON payload
+    registers new users
+    return:
+      json payload
     """
+    email = request.form['email']
+    password = request.form['password']
     try:
-        newuser = AUTH.register_user(email, password)
-        return jsonify({"email": newuser.email, "message": "user created"}), 200
+        new_user = AUTH.register_user(email, password)
+        return jsonify({"email": new_user.email, "message": "user created"}), 200
     except ValueError:
-        return jsonify({"message": "email already registered"}), 400
+        return jsonify({"message": "user already exists"}), 400
 
 
 if __name__ == "__main__":
